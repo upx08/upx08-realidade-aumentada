@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Questionário de compreensão - Conectway</title>
+<style>
+  :root{
+    --tinta:#111c2b; --papel:#ffffff; --fundo:#f4f2ef; --linha:#dcd7d0;
+    --acento:#b0543f; --acento-claro:#f6ece9; --texto-fraco:#5d6670;
+    --ok:#2f6b4f; --alerta:#9c3b2a;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--fundo); color:var(--tinta);
+    font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    padding:0 0 96px;
+  }
+  .caixa{max-width:720px;margin:0 auto;padding:0 16px}
+  header{background:var(--tinta);color:#fff;padding:20px 0 18px;margin-bottom:20px}
+  header .caixa{display:block}
+  h1{font-size:20px;margin:0 0 4px;letter-spacing:.2px}
+  header p{margin:0;font-size:13px;color:#c5ccd4}
+  .cartao{background:var(--papel);border:1px solid var(--linha);border-radius:10px;padding:18px;margin-bottom:14px}
+  label.campo{display:block;font-size:13px;font-weight:600;margin:0 0 6px;color:var(--texto-fraco)}
+  input[type=text],select{
+    width:100%;padding:12px;border:1px solid var(--linha);border-radius:8px;
+    font-size:16px;background:var(--papel);color:var(--tinta)
+  }
+  .linha2{display:flex;gap:12px;flex-wrap:wrap}
+  .linha2>div{flex:1 1 180px}
+  button{
+    font:inherit;font-weight:600;cursor:pointer;border-radius:8px;border:1px solid transparent;
+    padding:13px 18px;min-height:46px
+  }
+  .primario{background:var(--acento);color:#fff;width:100%}
+  .secundario{background:var(--papel);color:var(--tinta);border-color:var(--linha)}
+  .barra-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .barra-acoes button{flex:1 1 140px}
+  /* o padding e a margem negativa são iguais em todos os estados: o destaque de
+     item pendente não pode alterar a altura do bloco, senão o conteúdo abaixo
+     pula a cada toque e o participante marca a alternativa errada no celular */
+  .item{border-top:1px solid var(--linha);padding:18px 12px;margin:0 -12px;border-radius:8px}
+  .item:first-of-type{border-top:0;padding-top:4px}
+  .item .enun{font-weight:600;margin:0 0 12px;display:flex;gap:10px;align-items:flex-start}
+  .num{
+    flex:0 0 26px;height:26px;border-radius:50%;background:var(--tinta);color:#fff;
+    font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px
+  }
+  .alts{display:flex;flex-direction:column;gap:8px;margin-left:36px}
+  .alt{
+    display:flex;gap:10px;align-items:flex-start;border:1px solid var(--linha);
+    border-radius:8px;padding:12px;cursor:pointer;background:var(--papel)
+  }
+  .alt input{margin:3px 0 0;flex:0 0 auto;width:18px;height:18px;accent-color:var(--acento)}
+  .alt.marcada{border-color:var(--acento);background:var(--acento-claro)}
+  .item.pendente{background:#fdf6f4}
+  .item.pendente .num{background:var(--alerta)}
+  .grupo-mon{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--acento);margin:0 0 2px 36px}
+  .progresso{position:fixed;left:0;right:0;bottom:0;background:var(--papel);border-top:1px solid var(--linha);padding:10px 0 14px}
+  .progresso .caixa{display:flex;gap:12px;align-items:center}
+  .progresso span{font-size:13px;color:var(--texto-fraco);white-space:nowrap}
+  .progresso button{flex:1}
+  .aviso{color:var(--alerta);font-size:14px;margin:10px 0 0}
+  .peq{font-size:13px;color:var(--texto-fraco)}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  td,th{text-align:left;padding:5px 6px;border-bottom:1px solid var(--linha)}
+  .ok{color:var(--ok);font-weight:600}
+  .ruim{color:var(--alerta);font-weight:600}
+  .oculto{display:none}
+  .nota{font-size:34px;font-weight:700;margin:6px 0}
+</style>
+</head>
+<body>
+
+<header><div class="caixa">
+  <h1>Questionário de compreensão</h1>
+  <p id="sub">Técnicas e materiais construtivos · Conectway · UPx08</p>
+</div></header>
+
+<main class="caixa">
+
+  <!-- TELA 1: abertura, operada pelo pesquisador -->
+  <section id="telaInicio">
+    <div class="cartao">
+      <p class="peq" style="margin-top:0">Preenchido pelo pesquisador antes de entregar o aparelho ao participante.</p>
+      <div class="linha2">
+        <div>
+          <label class="campo" for="pid">Código do participante</label>
+          <input type="text" id="pid" placeholder="P01" autocomplete="off">
+        </div>
+        <div>
+          <label class="campo" for="grp">Grupo</label>
+          <select id="grp">
+            <option value="experimental">Experimental (RA)</option>
+            <option value="controle">Controle (bidimensional)</option>
+          </select>
+        </div>
+        <div>
+          <label class="campo" for="mom">Momento</label>
+          <select id="mom">
+            <option value="pre">Pré-teste</option>
+            <option value="pos">Pós-teste</option>
+          </select>
+        </div>
+      </div>
+      <p class="peq" style="margin-bottom:0">
+        <label><input type="checkbox" id="verNota"> Exibir a nota ao final (conferência da equipe, não usar com participante)</label>
+      </p>
+      <div class="barra-acoes">
+        <button class="primario" id="abrir">Iniciar questionário</button>
+      </div>
+      <p id="avisoInicio" class="aviso oculto"></p>
+    </div>
+
+    <div class="cartao">
+      <strong>Registros neste aparelho</strong>
+      <div id="resumo" class="peq"></div>
+      <div class="barra-acoes">
+        <button class="secundario" id="expJson">Exportar JSON</button>
+        <button class="secundario" id="expCsv">Exportar CSV</button>
+        <button class="secundario" id="conf">Conferir correção</button>
+      </div>
+      <div id="saidaConf" class="oculto"></div>
+    </div>
+  </section>
+
+  <!-- TELA 2: questionário -->
+  <section id="telaForm" class="oculto">
+    <div class="cartao">
+      <p class="peq" style="margin:0">
+        Marque uma alternativa em cada questão. Não há consulta e não há tempo limite.
+      </p>
+    </div>
+    <div class="cartao" id="itens"></div>
+  </section>
+
+  <!-- TELA 3: fim -->
+  <section id="telaFim" class="oculto">
+    <div class="cartao">
+      <h2 style="margin-top:0;font-size:18px">Respostas registradas</h2>
+      <p class="peq">Pode devolver o aparelho ao pesquisador.</p>
+      <div id="blocoNota" class="oculto">
+        <div class="nota" id="notaTxt"></div>
+        <div class="peq" id="detalheNota"></div>
+      </div>
+      <div class="barra-acoes">
+        <button class="secundario" id="voltarInicio">Voltar ao início</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="progresso oculto" id="rodape"><div class="caixa">
+  <span id="contador">0 de 10</span>
+  <button class="primario" id="concluir">Concluir</button>
+</div></div>
+
+<script>
+/* ============================================================
+   Questionário de compreensão - técnicas e materiais
+   Base: seção 3.4 do artigo. Nota de 0 a 10, um ponto por acerto.
+   Arquivo único, sem dependências, funciona abrindo direto (file://).
+   ============================================================ */
+
+var ITENS = [
+  { id:'q1', monumento:'Coliseu',
+    enunciado:'Qual é o material da estrutura do Coliseu?',
+    alternativas:[
+      'Concreto romano revestido de alvenaria',
+      'Blocos de granito encaixados sem argamassa',
+      'Concreto armado com estrutura de aço',
+      'Tijolos de barro secos ao sol'
+    ], correta:0, fonte:'LANCASTER, 2005' },
+
+  { id:'q2', monumento:'Coliseu',
+    enunciado:'Que elemento construtivo distribui o peso do Coliseu até o solo?',
+    alternativas:[
+      'Arcos e abóbadas',
+      'Colunas de ferro fundido',
+      'Paredes maciças sem aberturas',
+      'Tirantes de aço sob tração'
+    ], correta:0, fonte:'LANCASTER, 2005' },
+
+  { id:'q3', monumento:'Coliseu',
+    enunciado:'Como a estrutura do Coliseu está organizada?',
+    alternativas:[
+      'Em cinco anéis concêntricos',
+      'Em um único bloco retangular',
+      'Em quatro torres ligadas por passarelas',
+      'Em duas alas simétricas separadas por um pátio'
+    ], correta:0, fonte:'LANCASTER, 2005' },
+
+  { id:'q4', monumento:'Estátua da Liberdade',
+    enunciado:'Como é a estrutura interna da Estátua da Liberdade?',
+    alternativas:[
+      'Um pilar central de ferro com armação secundária em treliça',
+      'Um núcleo maciço de concreto',
+      'Uma casca de cobre autoportante, sem estrutura interna',
+      'Uma armação de madeira revestida por chapas'
+    ], correta:0, fonte:'NIST, 2017; ASCE METROPOLITAN SECTION, [s.d.]' },
+
+  { id:'q5', monumento:'Estátua da Liberdade',
+    enunciado:'De que material é a pele externa da Estátua da Liberdade?',
+    alternativas:[
+      'Cobre',
+      'Bronze fundido',
+      'Mármore branco',
+      'Aço inoxidável'
+    ], correta:0, fonte:'NIST, 2017; ASCE METROPOLITAN SECTION, [s.d.]' },
+
+  { id:'q6', monumento:'Estátua da Liberdade',
+    enunciado:'Como as chapas da pele externa foram moldadas?',
+    alternativas:[
+      'Marteladas contra moldes, pela técnica de repuxo',
+      'Fundidas em moldes de areia',
+      'Cortadas e dobradas a frio em prensa',
+      'Esculpidas a partir de blocos maciços'
+    ], correta:0, fonte:'NIST, 2017; ASCE METROPOLITAN SECTION, [s.d.]' },
+
+  { id:'q7', monumento:'Cristo Redentor',
+    enunciado:'Qual é o material da estrutura do Cristo Redentor?',
+    alternativas:[
+      'Concreto armado',
+      'Aço estrutural rebitado',
+      'Pedra-sabão maciça',
+      'Alvenaria de tijolos'
+    ], correta:0, fonte:'IPHAN, [s.d.]' },
+
+  { id:'q8', monumento:'Cristo Redentor',
+    enunciado:'Qual material reveste a superfície do Cristo Redentor?',
+    alternativas:[
+      'Mosaico de pedra-sabão',
+      'Chapas de cobre',
+      'Azulejos de cerâmica esmaltada',
+      'Argamassa pintada de branco'
+    ], correta:0, fonte:'IPHAN, [s.d.]' },
+
+  { id:'q9', monumento:'Cristo Redentor',
+    enunciado:'Que solução construtiva foi adotada para a estrutura resistir aos ventos do alto do morro?',
+    alternativas:[
+      'Uma leve inclinação de cerca de 5 graus próxima à cabeça',
+      'Cabos de aço ancorados na rocha',
+      'Uma base giratória que acompanha a direção do vento',
+      'Aberturas nos braços para deixar o vento passar'
+    ], correta:0, fonte:'IPHAN, [s.d.]' },
+
+  { id:'q10', monumento:'As três estruturas',
+    enunciado:'Qual associação entre monumento e material estrutural principal está correta?',
+    alternativas:[
+      'Coliseu, concreto romano; Estátua da Liberdade, ferro; Cristo Redentor, concreto armado',
+      'Coliseu, mármore; Estátua da Liberdade, bronze; Cristo Redentor, granito',
+      'Coliseu, concreto armado; Estátua da Liberdade, aço; Cristo Redentor, pedra-sabão',
+      'Coliseu, tijolo; Estátua da Liberdade, madeira; Cristo Redentor, concreto romano'
+    ], correta:0, fonte:'LANCASTER, 2005; NIST, 2017; IPHAN, [s.d.]' }
+];
+
+var NOTA_MAXIMA = ITENS.length; // dez itens, um ponto por acerto, nota de 0 a 10
+var CHAVE = 'upx08.coleta.v1';  // mesmo armazenamento usado pelo SUS
+
+/* ---------- correção ---------- */
+
+function corrigir(respostas){
+  var acertos = 0, detalhe = [];
+  for (var i = 0; i < ITENS.length; i++){
+    var item = ITENS[i];
+    var marcada = respostas[item.id];
+    if (marcada === undefined || marcada === null)
+      throw new Error('Item sem resposta: ' + item.id);
+    if (typeof marcada !== 'number' || marcada < 0 || marcada >= item.alternativas.length)
+      throw new Error('Alternativa inválida no item ' + item.id + ': ' + JSON.stringify(marcada));
+    var certo = marcada === item.correta;
+    if (certo) acertos++;
+    detalhe.push({ id:item.id, marcada:marcada, correta:item.correta, acertou:certo });
+  }
+  return { acertos: acertos, nota: acertos, detalhe: detalhe };
+}
+
+function montarRegistro(p){
+  var r = corrigir(p.respostas);
+  return {
+    instrumento: 'COMPREENSAO',
+    momento: p.momento,
+    participanteId: p.participanteId,
+    grupo: p.grupo,
+    inicioEm: p.inicioEm.toISOString(),
+    fimEm: p.fimEm.toISOString(),
+    duracaoSegundos: Math.round((p.fimEm - p.inicioEm) / 1000),
+    respostas: JSON.parse(JSON.stringify(p.respostas)),
+    itensCorretos: r.detalhe,
+    acertos: r.acertos,
+    nota: r.nota,
+    notaMaxima: NOTA_MAXIMA
+  };
+}
+
+/* ---------- armazenamento ---------- */
+
+function listarRegistros(){
+  try { return JSON.parse(localStorage.getItem(CHAVE) || '[]'); }
+  catch (e) { return []; }
+}
+function gravarRegistros(lista){
+  try { localStorage.setItem(CHAVE, JSON.stringify(lista)); return true; }
+  catch (e) { return false; }
+}
+function acharRegistro(pid, momento){
+  var l = listarRegistros();
+  for (var i = 0; i < l.length; i++){
+    if (l[i].instrumento === 'COMPREENSAO' && l[i].participanteId === pid && l[i].momento === momento) return i;
+  }
+  return -1;
+}
+function salvar(reg){
+  var lista = listarRegistros();
+  var i = acharRegistro(reg.participanteId, reg.momento);
+  if (i >= 0) lista[i] = reg; else lista.push(reg);
+  return gravarRegistros(lista);
+}
+
+function montarCsv(lista){
+  var cab = ['instrumento','momento','participanteId','grupo','inicioEm','fimEm','duracaoSegundos','resultado'];
+  for (var i = 1; i <= 10; i++) cab.push('q' + i);
+  var linhas = [cab.join(',')];
+  for (var j = 0; j < lista.length; j++){
+    var r = lista[j];
+    var resultado = (r.nota !== undefined) ? r.nota : (r.pontuacao !== undefined ? r.pontuacao : '');
+    var col = [r.instrumento, r.momento, r.participanteId, r.grupo, r.inicioEm, r.fimEm, r.duracaoSegundos, resultado];
+    for (var k = 1; k <= 10; k++){
+      var v = r.respostas ? r.respostas['q' + k] : '';
+      col.push(v === undefined || v === null ? '' : v);
+    }
+    linhas.push(col.map(function(c){
+      var s = String(c === undefined || c === null ? '' : c);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }).join(','));
+  }
+  return linhas.join('\n');
+}
+
+function baixar(nome, conteudo, tipo){
+  try {
+    var blob = new Blob([conteudo], { type: tipo });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = nome;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+  } catch (e) {
+    alert('Não foi possível baixar neste aparelho. Conteúdo:\n\n' + conteudo.slice(0, 3000));
+  }
+}
+
+/* ---------- tela ---------- */
+
+var el = function(id){ return document.getElementById(id); };
+var sessao = null;
+
+function desenharItens(){
+  var html = '';
+  var monAnterior = null;
+  for (var i = 0; i < ITENS.length; i++){
+    var it = ITENS[i];
+    if (it.monumento !== monAnterior){
+      html += '<p class="grupo-mon">' + it.monumento + '</p>';
+      monAnterior = it.monumento;
+    }
+    html += '<div class="item" id="bloco-' + it.id + '">';
+    html += '<p class="enun"><span class="num">' + (i + 1) + '</span><span>' + it.enunciado + '</span></p>';
+    html += '<div class="alts">';
+    for (var a = 0; a < it.alternativas.length; a++){
+      html += '<label class="alt" id="alt-' + it.id + '-' + a + '">' +
+              '<input type="radio" name="' + it.id + '" value="' + a + '">' +
+              '<span>' + it.alternativas[a] + '</span></label>';
+    }
+    html += '</div></div>';
+  }
+  el('itens').innerHTML = html;
+
+  var radios = el('itens').querySelectorAll('input[type=radio]');
+  for (var r = 0; r < radios.length; r++){
+    radios[r].addEventListener('change', function(ev){
+      var nome = ev.target.name;
+      // busca pelo name exato: seletor por prefixo de id faria "q1" casar com "q10"
+      var irmaos = el('itens').querySelectorAll('input[name="' + nome + '"]');
+      for (var m = 0; m < irmaos.length; m++) irmaos[m].parentNode.classList.remove('marcada');
+      ev.target.parentNode.classList.add('marcada');
+      var bloco = el('bloco-' + nome);
+      if (bloco) bloco.classList.remove('pendente');
+      atualizarContador();
+    });
+  }
+}
+
+function respostasAtuais(){
+  var out = {};
+  for (var i = 0; i < ITENS.length; i++){
+    var m = el('itens').querySelector('input[name="' + ITENS[i].id + '"]:checked');
+    if (m) out[ITENS[i].id] = Number(m.value);
+  }
+  return out;
+}
+
+function atualizarContador(){
+  var n = Object.keys(respostasAtuais()).length;
+  el('contador').textContent = n + ' de ' + ITENS.length;
+}
+
+function mostrar(tela){
+  el('telaInicio').classList.toggle('oculto', tela !== 'inicio');
+  el('telaForm').classList.toggle('oculto', tela !== 'form');
+  el('telaFim').classList.toggle('oculto', tela !== 'fim');
+  el('rodape').classList.toggle('oculto', tela !== 'form');
+  window.scrollTo(0, 0);
+}
+
+function atualizarResumo(){
+  var l = listarRegistros();
+  if (!l.length){ el('resumo').textContent = 'Nenhum registro gravado ainda.'; return; }
+  var porInstr = {};
+  for (var i = 0; i < l.length; i++){
+    var k = l[i].instrumento + ' / ' + (l[i].momento || '-');
+    porInstr[k] = (porInstr[k] || 0) + 1;
+  }
+  var txt = [];
+  for (var k2 in porInstr) txt.push(k2 + ': ' + porInstr[k2]);
+  el('resumo').textContent = txt.join(' · ');
+}
+
+/* ---------- eventos ---------- */
+
+el('abrir').addEventListener('click', function(){
+  var pid = el('pid').value.trim();
+  var aviso = el('avisoInicio');
+  if (!pid){
+    aviso.textContent = 'Informe o código do participante antes de iniciar.';
+    aviso.classList.remove('oculto');
+    el('pid').focus();
+    return;
+  }
+  var momento = el('mom').value;
+  if (acharRegistro(pid, momento) >= 0){
+    var ok = confirm('Já existe registro de ' + pid + ' neste momento (' +
+      (momento === 'pre' ? 'pré-teste' : 'pós-teste') +
+      ').\n\nRefazer apaga o registro anterior. Continuar?');
+    if (!ok) return;
+  }
+  aviso.classList.add('oculto');
+  sessao = {
+    participanteId: pid,
+    grupo: el('grp').value,
+    momento: momento,
+    verNota: el('verNota').checked,
+    inicioEm: new Date()
+  };
+  el('sub').textContent = pid + ' · ' + (sessao.grupo === 'experimental' ? 'experimental' : 'controle') +
+                          ' · ' + (momento === 'pre' ? 'pré-teste' : 'pós-teste');
+  desenharItens();
+  atualizarContador();
+  mostrar('form');
+});
+
+el('concluir').addEventListener('click', function(){
+  var resp = respostasAtuais();
+  var faltando = [];
+  for (var i = 0; i < ITENS.length; i++){
+    if (resp[ITENS[i].id] === undefined) faltando.push(ITENS[i].id);
+  }
+  if (faltando.length){
+    for (var f = 0; f < faltando.length; f++) el('bloco-' + faltando[f]).classList.add('pendente');
+    var primeiro = el('bloco-' + faltando[0]);
+    primeiro.scrollIntoView({ behavior:'smooth', block:'center' });
+    var av = el('itens').querySelector('.aviso');
+    if (!av){
+      av = document.createElement('p');
+      av.className = 'aviso';
+      el('itens').appendChild(av);
+    }
+    av.textContent = 'Faltam ' + faltando.length +
+      (faltando.length === 1 ? ' questão' : ' questões') + ' sem resposta.';
+    return;
+  }
+
+  var reg = montarRegistro({
+    participanteId: sessao.participanteId,
+    grupo: sessao.grupo,
+    momento: sessao.momento,
+    respostas: resp,
+    inicioEm: sessao.inicioEm,
+    fimEm: new Date()
+  });
+  var gravou = salvar(reg);
+
+  if (sessao.verNota){
+    el('blocoNota').classList.remove('oculto');
+    el('notaTxt').textContent = reg.nota + ' / ' + NOTA_MAXIMA;
+    var errados = reg.itensCorretos.filter(function(d){ return !d.acertou; }).map(function(d){ return d.id; });
+    el('detalheNota').textContent = errados.length
+      ? 'Itens errados: ' + errados.join(', ')
+      : 'Todos os itens corretos.';
+  } else {
+    el('blocoNota').classList.add('oculto');
+  }
+  if (!gravou) alert('Atenção: não foi possível gravar neste navegador. Anote as respostas antes de sair.');
+  atualizarResumo();
+  mostrar('fim');
+});
+
+el('voltarInicio').addEventListener('click', function(){
+  sessao = null;
+  el('pid').value = '';
+  el('sub').textContent = 'Técnicas e materiais construtivos · Conectway · UPx08';
+  atualizarResumo();
+  mostrar('inicio');
+});
+
+el('expJson').addEventListener('click', function(){
+  var l = listarRegistros();
+  if (!l.length){ alert('Nenhum registro para exportar.'); return; }
+  baixar('upx08-coleta-' + new Date().toISOString().slice(0,10) + '.json',
+         JSON.stringify(l, null, 2), 'application/json');
+});
+
+el('expCsv').addEventListener('click', function(){
+  var l = listarRegistros();
+  if (!l.length){ alert('Nenhum registro para exportar.'); return; }
+  baixar('upx08-coleta-' + new Date().toISOString().slice(0,10) + '.csv',
+         montarCsv(l), 'text/csv');
+});
+
+/* conferência da correção, demonstrável sem terminal */
+el('conf').addEventListener('click', function(){
+  var casos = [];
+  function resp(fn){ var o = {}; for (var i = 0; i < ITENS.length; i++) o[ITENS[i].id] = fn(i); return o; }
+
+  casos.push({ nome:'Todas corretas', r:resp(function(i){ return ITENS[i].correta; }), esperado:10 });
+  casos.push({ nome:'Todas erradas', r:resp(function(i){ return (ITENS[i].correta + 1) % 4; }), esperado:0 });
+  casos.push({ nome:'Cinco primeiras corretas', r:resp(function(i){ return i < 5 ? ITENS[i].correta : (ITENS[i].correta + 2) % 4; }), esperado:5 });
+  casos.push({ nome:'Só o item transversal correto', r:resp(function(i){ return i === 9 ? ITENS[i].correta : (ITENS[i].correta + 1) % 4; }), esperado:1 });
+
+  var html = '<table><tr><th>Caso</th><th>Esperado</th><th>Obtido</th></tr>';
+  var tudoOk = true;
+  for (var c = 0; c < casos.length; c++){
+    var obtido;
+    try { obtido = corrigir(casos[c].r).nota; } catch (e) { obtido = 'erro'; }
+    var passou = obtido === casos[c].esperado;
+    if (!passou) tudoOk = false;
+    html += '<tr><td>' + casos[c].nome + '</td><td>' + casos[c].esperado +
+            '</td><td class="' + (passou ? 'ok' : 'ruim') + '">' + obtido + '</td></tr>';
+  }
+  var faltou = 'ok', invalida = 'ok';
+  try { corrigir({ q1:0 }); faltou = 'não barrou'; } catch (e) {}
+  var cheio = {}; for (var z = 0; z < ITENS.length; z++) cheio[ITENS[z].id] = ITENS[z].correta;
+  cheio.q3 = 9;
+  try { corrigir(cheio); invalida = 'não barrou'; } catch (e) {}
+  html += '<tr><td>Recusa item em branco</td><td>erro</td><td class="' + (faltou === 'ok' ? 'ok' : 'ruim') + '">' + faltou + '</td></tr>';
+  html += '<tr><td>Recusa alternativa inexistente</td><td>erro</td><td class="' + (invalida === 'ok' ? 'ok' : 'ruim') + '">' + invalida + '</td></tr>';
+  html += '</table><p class="peq">' + (tudoOk && faltou === 'ok' && invalida === 'ok'
+    ? 'Correção conferida: todos os casos passaram.'
+    : 'Atenção: há caso divergente acima.') + '</p>';
+
+  el('saidaConf').innerHTML = html;
+  el('saidaConf').classList.remove('oculto');
+});
+
+atualizarResumo();
+</script>
+</body>
+</html>
